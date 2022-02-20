@@ -16,19 +16,19 @@
 mod_bar_ui <- function(id){
   ns <- NS(id)
   pageContainer(
-    h2("Countries through time"),
+    h2("Criminal Type Counts Through Time"),
     br(),
     fluidRow(
       column(
         6,
-        uiOutput(ns("country_select_generated"))
+        uiOutput(ns("criminal_type_selected"))
       ),
       column(
         6,
         shinyWidgets::radioGroupButtons(
           inputId = ns("value"),
           label = "Metric",
-          choices = c("rank", "score"),
+          choices = c("count", "percentage"),
           checkIcon = list(
             yes = icon("ok",
             lib = "glyphicon")
@@ -49,15 +49,15 @@ mod_bar_ui <- function(id){
 mod_bar_server <- function(input, output, session){
   ns <- session$ns
 
-  output$country_select_generated <- renderUI({
-    cns <- fopi %>% 
-      dplyr::arrange(country) %>% 
-      dplyr::distinct(country) %>% 
-      dplyr::pull(country)
+  output$criminal_type_selected <- renderUI({
+    cns <-arrest %>% 
+      dplyr::arrange(OFNS_DESC) %>% 
+      dplyr::distinct(OFNS_DESC) %>% 
+      dplyr::pull(OFNS_DESC)
 
     selectizeInput(
-      ns("country_select"),
-      "Search a country",
+      ns("criminal_type_selected"),
+      "Search a criminal type",
       choices = cns,
       selected = sample(cns, 2),
       multiple = TRUE
@@ -65,20 +65,31 @@ mod_bar_server <- function(input, output, session){
   })
 
   output$trend <- echarts4r::renderEcharts4r({
-    req(input$country_select)
+    req(input$criminal_type_selected)
 
     msg <- paste0(tools::toTitleCase(input$value), ", the lower the better")
 
-    fopi %>% 
-      dplyr::mutate(year = as.character(year)) %>% 
-      dplyr::arrange(year) %>% 
-      dplyr::filter(country %in% input$country_select) %>% 
-      dplyr::group_by(country) %>% 
-      echarts4r::e_charts(year) %>% 
+    temp <- arrest %>% 
+      dplyr::mutate(Year_Quarter = as.character(Year_Quarter)) %>% 
+      dplyr::arrange(Year_Quarter) %>% 
+      dplyr::filter(OFNS_DESC %in% cns) %>% 
+      dplyr::group_by(Year_Quarter)%>%
+      dplyr::summarise(total_count  = n())
+    
+    
+    arrest %>% 
+      dplyr::mutate(Year_Quarter = as.character(Year_Quarter)) %>% 
+      dplyr::arrange(Year_Quarter) %>% 
+      dplyr::filter(OFNS_DESC %in% input$criminal_type_selected) %>% 
+      dplyr::group_by(OFNS_DESC,Year_Quarter)%>%
+      dplyr::summarise(count = n())%>%
+      left_join(temp, by = "Year_Quarter")%>%
+      dplyr::mutate(percentage = count/total_count)%>% 
+      echarts4r::e_charts(Year_Quarter) %>% 
       echarts4r::e_line_(input$value) %>% 
       echarts4r::e_tooltip(trigger = "axis") %>% 
       echarts4r::e_y_axis(inverse = TRUE) %>% 
-      echarts4r::e_axis_labels("Years") %>% 
+      echarts4r::e_axis_labels("Year_Quarter") %>% 
       echarts4r::e_title(msg) %>% 
       echarts4r::e_color(
         c("#247BA0", "#FF1654", "#70C1B3", "#2f2f2f", "#F3FFBD", "#B2DBBF")
