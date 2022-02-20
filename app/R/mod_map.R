@@ -9,6 +9,7 @@
 #'
 #' @importFrom shiny NS tagList 
 #' 
+library(dplyr)
 
 mod_map_ui <- function(id){
   ns <- NS(id)
