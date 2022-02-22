@@ -46,6 +46,8 @@ mod_bar_ui <- function(id){
 #' @export
 #' @keywords internal
     
+nyc <- read.csv('../data/arrest.csv')
+
 mod_bar_server <- function(input, output, session){
   ns <- session$ns
 
