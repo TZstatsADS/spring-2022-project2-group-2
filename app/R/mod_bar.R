@@ -46,6 +46,8 @@ mod_bar_ui <- function(id){
 #' @export
 #' @keywords internal
     
+arrest <- read.csv('../data/arrest.csv')
+
 mod_bar_server <- function(input, output, session){
   ns <- session$ns
 
@@ -67,12 +69,10 @@ mod_bar_server <- function(input, output, session){
   output$trend <- echarts4r::renderEcharts4r({
     req(input$criminal_type_selected)
 
-    msg <- paste0(tools::toTitleCase(input$value), ", the lower the better")
-
     temp <- arrest %>% 
       dplyr::mutate(Year_Quarter = as.character(Year_Quarter)) %>% 
       dplyr::arrange(Year_Quarter) %>% 
-      dplyr::filter(OFNS_DESC %in% cns) %>% 
+      dplyr::filter(OFNS_DESC %in% input$criminal_type_selected) %>% 
       dplyr::group_by(Year_Quarter)%>%
       dplyr::summarise(total_count  = n())
     
@@ -84,13 +84,12 @@ mod_bar_server <- function(input, output, session){
       dplyr::group_by(OFNS_DESC,Year_Quarter)%>%
       dplyr::summarise(count = n())%>%
       left_join(temp, by = "Year_Quarter")%>%
-      dplyr::mutate(percentage = count/total_count)%>% 
+      dplyr::mutate(percentage = round(count/total_count, 2))%>% 
       echarts4r::e_charts(Year_Quarter) %>% 
       echarts4r::e_line_(input$value) %>% 
       echarts4r::e_tooltip(trigger = "axis") %>% 
       echarts4r::e_y_axis(inverse = TRUE) %>% 
       echarts4r::e_axis_labels("Year_Quarter") %>% 
-      echarts4r::e_title(msg) %>% 
       echarts4r::e_color(
         c("#247BA0", "#FF1654", "#70C1B3", "#2f2f2f", "#F3FFBD", "#B2DBBF")
       )
