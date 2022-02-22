@@ -3,7 +3,7 @@
 export("%>%")
 export(mod_ts_server)
 export(mod_ts_ui)
-export(run_fopi)
+export(run_app)
 import(fopi)
 import(fullPage)
 import(shiny)

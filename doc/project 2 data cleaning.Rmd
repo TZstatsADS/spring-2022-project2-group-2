@@ -1,0 +1,97 @@
+---
+title: "project 2"
+author: "jd3716"
+date: "2/15/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r warning=FALSE}
+library(readr)
+library(tidyr)
+library(plyr)
+```
+
+```{r}
+arrest_2021 <- read.csv("NYPD_Arrest_Data__Year_to_Date_.csv")
+arrest_his <- read_csv("NYPD_Arrests_Data__Historic_.csv")
+# names(arrest_2021)
+# names(arrest_his)
+```
+
+```{r}
+# Check if there is any missing or malformed date
+# nhis <- dim(arrest_his)[1]
+# n21 <- dim(arrest_2021)[1]
+# sum(is.na(arrest_his$ARREST_DATE)) == 0
+# sum(is.na(arrest_2021$ARREST_DATE)) == 0
+# pat <- "[0-9][0-9]?/[0-9][0-9]?/[0-9]{4}"
+# length(grep(pat, arrest_his$ARREST_DATE)) == nhis
+# length(grep(pat, arrest_2021$ARREST_DATE)) == n21
+
+
+# Transform format, extract year, give up useless data and variables
+arrest_his$ARREST_DATE <- as.Date(arrest_his$ARREST_DATE, "%m/%d/%Y")
+arrest_2021$ARREST_DATE <- as.Date(arrest_2021$ARREST_DATE, "%m/%d/%Y")
+arrest_his$Year <- as.integer(format(arrest_his$ARREST_DATE, format = "%y"))
+# table(arrest_his$Year)
+arrest_2021$Year <- 21
+# arrest_2021$Year <- as.integer(format(arrest_2021$ARREST_DATE, format = "%y"))
+# table(arrest_2021$Year)
+arrest_his <- arrest_his[arrest_his$Year > 17, c(2, 6, 9, 10, 12, 13, 14, 20)]
+arrest_2021 <- arrest_2021[, c(2, 6, 9, 10, 12, 13, 14, 20)]
+
+
+# Combine two data sets and further clean the data
+arrest <- rbind(arrest_his, arrest_2021)
+names(arrest)
+# sum(is.na(arrest$OFNS_DESC))
+# sum(is.na(arrest$ARREST_BORO))
+# sum(is.na(arrest$ARREST_PRECINCT))
+# sum(is.na(arrest$AGE_GROUP))
+# sum(is.na(arrest$PERP_SEX))
+# sum(is.na(arrest$PERP_RACE))
+arrest <- arrest[!is.na(arrest$OFNS_DESC), ]
+# table(arrest$OFNS_DESC)
+# table(arrest$ARREST_BORO)
+# table(arrest$ARREST_PRECINCT)
+# table(arrest$AGE_GROUP)
+# table(arrest$PERP_SEX)
+# table(arrest$PERP_RACE)
+arrest <- arrest[arrest$PERP_RACE != "UNKNOWN", ]
+arrest <- arrest[arrest$OFNS_DESC != "", ]
+ofns <- names(table(arrest$OFNS_DESC))
+a <- ofns[c(2, 10, 11, 14, 20, 24, 29, 32, 34, 38, 38, 40, 44, 44, 48, 48, 48, 48, 52, 54, 57, 59, 59, 65, 66, 66, 72, 83, 83, 17)]
+b <- ofns[c(3, 9, 12, 13, 19, 25, 30, 33, 35, 36, 37, 39, 42, 43, 45, 46, 47, 31, 51, 55, 56, 58, 60, 64, 67, 68, 73, 81, 80, 82)]
+arrest$OFNS_DESC <- mapvalues(arrest$OFNS_DESC, b, a)
+t <- table(arrest$OFNS_DESC)
+ofns <- names(t)
+a <- c(rep("ADMINISTRATIVE $ HEALTH CODES", 2), rep("OTHER LAWS", 4), rep("ASSAULT", 2), rep("VEHICLE AND TRAFFIC", 3), rep("OFFENSES", 10), rep("THEFT & LARCENY", 5))
+b <- ofns[c(2, 34, 3, 4, 35, 42, 7, 19, 27, 43, 53, 5, 29, 36, 37, 38, 39, 40, 41, 44, 47, 24, 45, 46, 51, 52)]
+arrest$OFNS_DESC <- mapvalues(arrest$OFNS_DESC, b, a)
+t <- sort(table(arrest$OFNS_DESC), decreasing = TRUE)
+ofns <- names(t)
+a <- c("THEFT & LARCENY", rep("OTHER", 23))
+b <- ofns[10:33]
+arrest$OFNS_DESC <- mapvalues(arrest$OFNS_DESC, b, a)
+
+
+# create the "Year_Quarter" and "Race_Sex" variables
+Month <- as.integer(format(arrest$ARREST_DATE, format = "%m"))
+n <- dim(arrest)[1]
+Month <- Month-1
+arrest$Quarter <- Month%/%3 + 1
+arrest <- unite(arrest, "Year_Quarter", Year, Quarter)
+arrest <- unite(arrest, "Race_Sex", PERP_RACE, PERP_SEX)
+
+
+a <- c("Bronx", "Staten Island", "Brooklyn", "Manhattan", "Queens")
+b <- c("B", "S", "K", "M", "Q")
+arrest$ARREST_BORO <- mapvalues(arrest$ARREST_BORO, b, a)
+arrest <- arrest[, -1]
+write.table(arrest, "arrest.csv", row.names=FALSE, col.names=TRUE, sep=",")
+```
+

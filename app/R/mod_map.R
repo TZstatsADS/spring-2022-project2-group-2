@@ -9,6 +9,7 @@
 #'
 #' @importFrom shiny NS tagList 
 #' 
+
 library(dplyr)
 
 mod_map_ui <- function(id){
@@ -35,7 +36,7 @@ mod_map_ui <- function(id){
 #' @noRd
 #' 
 
-nyc <- read.csv('../data/arrest.csv') %>%
+arrest <- read.csv('../data/arrest.csv') %>%
   dplyr::mutate(Borough = ARREST_BORO, Precinct = ARREST_PRECINCT)
 
 nyc_boro <- jsonlite::read_json('../data/boroughs.geojson')
@@ -52,7 +53,7 @@ mod_map_server <- function(input, output, session){
   
   output$map <- echarts4r::renderEcharts4r({
     if (input$value == "Borough") {
-      nyc %>% 
+      arrest %>% 
         count(Borough, Year_Quarter) %>%
         group_by(Year_Quarter) %>%
         echarts4r::e_charts(Borough, timeline = TRUE) %>% 
@@ -60,7 +61,7 @@ mod_map_server <- function(input, output, session){
         echarts4r::e_map(n, map = "nyc_boro", name = 'Borough') %>%
         afterecharts()
     } else {
-      nyc %>% 
+      arrest %>% 
         count(Precinct, Year_Quarter) %>%
         group_by(Year_Quarter) %>%
         echarts4r::e_charts(Precinct, timeline = TRUE) %>% 
@@ -81,7 +82,7 @@ afterecharts <- function(echart) {
                               color = "#2f2f2f"
                             ),
                             inRange = list(
-                              color = c("#B2DBBF", "#247BA0", "#70C1B3")
+                              color = c("#B2DBBF", "#247BA0")
                             )
     ) %>% 
     echarts4r::e_color(background = "rgba(0,0,0,0)") %>%  

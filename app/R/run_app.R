@@ -7,7 +7,7 @@
 #' @import fullPage
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
-run_fopi <- function() {
+run_app <- function() {
   utils::data('fopi', package = 'fopi')
   
   with_golem_options(
