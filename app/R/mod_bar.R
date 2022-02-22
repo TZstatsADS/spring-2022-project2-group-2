@@ -88,7 +88,7 @@ mod_bar_server <- function(input, output, session){
       echarts4r::e_charts(Year_Quarter) %>% 
       echarts4r::e_line_(input$value) %>% 
       echarts4r::e_tooltip(trigger = "axis") %>% 
-      echarts4r::e_y_axis(inverse = TRUE) %>% 
+      echarts4r::e_y_axis(inverse = FALSE) %>% 
       echarts4r::e_axis_labels("Year_Quarter") %>% 
       echarts4r::e_color(
         c("#247BA0", "#FF1654", "#70C1B3", "#2f2f2f", "#F3FFBD", "#B2DBBF")
