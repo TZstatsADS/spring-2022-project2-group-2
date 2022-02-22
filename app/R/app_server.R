@@ -7,7 +7,7 @@ app_server <- function(input, output, session) {
   )
 
   output$title <- typedjs::renderTyped({
-    typedjs::typed(c("Freedom of Fake news^1000", "Freedom of Press Index^500<br>A Visualisation"), typeSpeed = 25, smartBackspace = TRUE)
+    typedjs::typed(c("What Happened to Criminals during Pandemic?^1000", "New York Criminal Analysis^500<br>A Visualisation"), typeSpeed = 25, smartBackspace = TRUE)
   })
   
   callModule(mod_ts_server, "ts")

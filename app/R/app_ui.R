@@ -21,7 +21,7 @@ app_ui <- function() {
         center = TRUE,
         img = "www/img/reading.jpg",
         menu = "home",
-        h1(typedjs::typed("title"), class = "header shadow-dark"),
+        h1(typedjs::typed(c("What Happened to Criminals during Pandemic?^1000", "New York Criminal Analysis^500<br>A Visualisation"), typeSpeed = 25, smartBackspace = TRUE), class = "header shadow-dark"),
         h3(
           class = "light footer",
           tags$a("Applied Data Science", href = "http://tzstatsads.github.io", class = "link") ,"in Columbia"
