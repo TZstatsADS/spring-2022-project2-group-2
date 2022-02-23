@@ -16,23 +16,40 @@
 mod_ts_ui <- function(id){
   ns <- NS(id)
   pageContainer(
-    h2("Countries through time"),
+    h2("Race & Gender vs. Number of Crimes"),
     br(),
     fluidRow(
       column(
         6,
-        uiOutput(ns("country_select_generated"))
+        shinyWidgets::awesomeCheckboxGroup(
+          inputId = "SexFinderr",
+          label = "Gender:", 
+          choices = c("Male" = "M", "Female" = "F"),
+          multiple = TRUE,
+          selected = c("Male" = "M", "Female" = "F"),
+        )
       ),
       column(
         6,
-        shinyWidgets::radioGroupButtons(
-          inputId = ns("value"),
-          label = "Metric",
-          choices = c("rank", "score"),
-          checkIcon = list(
-            yes = icon("ok",
-            lib = "glyphicon")
-          )
+        shinyWidgets::awesomeCheckboxGroup(
+          inputId = "RaceFinder",
+          label = "Race:", 
+          choices = c(
+            "Black" = "BLACK",
+            "White" = "WHITE",
+            "Black Hispanic" = "BLACK HISPANIC",
+            "White Hispanic" = "WHITE HISPANIC",
+            "Asian/Pacific Islander" = "ASIAN / PACIFIC ISLANDER",
+            "American Indian/Alaskan Native" = "AMERICAN INDIAN/ALASKAN NATIVE"),
+          multiple = TRUE,
+          selected = selected = c(
+            "Black" = "BLACK",
+            "White" = "WHITE",
+            "Black Hispanic" = "BLACK HISPANIC",
+            "White Hispanic" = "WHITE HISPANIC",
+            "Asian/Pacific Islander" = "ASIAN / PACIFIC ISLANDER",
+            "American Indian/Alaskan Native" = "AMERICAN INDIAN/ALASKAN NATIVE")
+              ),
         )
       )
     ),
@@ -40,6 +57,31 @@ mod_ts_ui <- function(id){
   )
 }
     
+library(shiny)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(stringr)  
+
+arrest <- read.csv('../data/arrest.csv') %>%
+  separate(Race_Sex, c("Race", "Sex"), "_", remove = FALSE)
+
+arrest$Race_Sex[arrest$Race_Sex == "BLACK_M"] <- "B_M"
+arrest$Race_Sex[arrest$Race_Sex == "BLACK_F"] <- "B_F"
+arrest$Race_Sex[arrest$Race_Sex == "WHITE_M"] <- "W_M"
+arrest$Race_Sex[arrest$Race_Sex == "WHITE_F"] <- "W_F"
+arrest$Race_Sex[arrest$Race_Sex == "BLACK HISPANIC_M"] <- "B&H_M"
+arrest$Race_Sex[arrest$Race_Sex == "BLACK HISPANIC_F"] <- "B&H_F"
+arrest$Race_Sex[arrest$Race_Sex == "WHITE HISPANIC_M"] <- "W&H_M"
+arrest$Race_Sex[arrest$Race_Sex == "WHITE HISPANIC_F"] <- "W&H_F"
+arrest$Race_Sex[arrest$Race_Sex == "ASIAN / PACIFIC ISLANDER_M"] <- "A|P_M"
+arrest$Race_Sex[arrest$Race_Sex == "ASIAN / PACIFIC ISLANDER_F"] <- "A|P_F"
+arrest$Race_Sex[arrest$Race_Sex == "AMERICAN INDIAN/ALASKAN NATIVE_M"] <- "A|A_M"
+arrest$Race_Sex[arrest$Race_Sex == "AMERICAN INDIAN/ALASKAN NATIVE_F"] <- "A|A_F"
+
+
+
+
 # Module Server
     
 #' @rdname mod_ts
@@ -49,39 +91,28 @@ mod_ts_ui <- function(id){
 mod_ts_server <- function(input, output, session){
   ns <- session$ns
 
-  output$country_select_generated <- renderUI({
-    cns <- fopi %>% 
-      dplyr::arrange(country) %>% 
-      dplyr::distinct(country) %>% 
-      dplyr::pull(country)
-
-    selectizeInput(
-      ns("country_select"),
-      "Search a country",
-      choices = cns,
-      selected = sample(cns, 2),
-      multiple = TRUE
-    )
+  racesexfinder <- reactive({
+    req(input$RaceFinder)
+    req(input$SexFinder)
+    filter(arrest, Race == input$RaceFinder) %>%
+      filter(Sex == input$SexFinder)
   })
-
-  output$trend <- echarts4r::renderEcharts4r({
-    req(input$country_select)
-
-    msg <- paste0(tools::toTitleCase(input$value), ", the lower the better")
-
-    fopi %>% 
-      dplyr::mutate(year = as.character(year)) %>% 
-      dplyr::arrange(year) %>% 
-      dplyr::filter(country %in% input$country_select) %>% 
-      dplyr::group_by(country) %>% 
-      echarts4r::e_charts(year) %>% 
-      echarts4r::e_line_(input$value) %>% 
-      echarts4r::e_tooltip(trigger = "axis") %>% 
-      echarts4r::e_y_axis(inverse = TRUE) %>% 
-      echarts4r::e_axis_labels("Years") %>% 
-      echarts4r::e_title(msg) %>% 
-      echarts4r::e_color(
-        c("#247BA0", "#FF1654", "#70C1B3", "#2f2f2f", "#F3FFBD", "#B2DBBF")
-      )
+  
+  race_sex_finder <- reactive({
+    counts <- as.data.frame(table(racesexfinder()$Race_Sex))
+    colnames(counts) <- c("Race_Sex", "Counts")
+    return(counts)
+  })
+  
+  output$racesexplot <- renderPlot({
+    barplot(t(race_sex_finder()$Counts),
+            beside=TRUE,
+            col="#69b3a2",
+            # horiz=TRUE,
+            # las=2,
+            cex.names=.7,
+            names.arg = race_sex_finder()$Race_Sex
+    )
+    
   })
 }
