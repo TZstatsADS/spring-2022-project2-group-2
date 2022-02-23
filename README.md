@@ -1,4 +1,4 @@
-# Project 2: New York Criminal Analysis
+# Project 2: New York Criminal Analysis -- A Visualization
 
 + Term: Spring 2022
 + Group 2
@@ -12,7 +12,9 @@
 	+  "Map" shows *the density of crimes* among *different areas* occured in New York City. "Precinct" and "Borough" can be selected so that users can choose which kind of map they prefer to see. Furthermore, users can also to see the number of crime in specified area by pointing that area.
 	+  In "Bar", users can select at least one race and one sex to visualize the the relationships between *race & sex* and *crime numbers* within the past 4 years though a bar graph. 
 	+  Via "Series", users can see a line chart with different *criminal types*, as *time period per quater* versus either *the counts of crime* or *the percentage of crime*. 
-	
+
++ **Shiny Applications**： (https://adsproj2group2.shinyapps.io/crime-in-nyc/#ts) 
+
 + **Contribution statement**: All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. The following is our duty for this project:
 	+ *Jun Ding* cleaned the data for the rest team members as what they used further;
 	+ *Daoyang E* created the page "Series";
