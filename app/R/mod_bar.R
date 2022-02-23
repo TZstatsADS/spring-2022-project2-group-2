@@ -1,6 +1,6 @@
 # Module UI
   
-#' @title   mod_ts_ui and mod_ts_server
+#' @title   mod_bar_ui and mod_bar_server
 #' @description  A shiny Module.
 #'
 #' @param id shiny id
@@ -8,33 +8,26 @@
 #' @param output internal
 #' @param session internal
 #'
-#' @rdname mod_ts
+#' @rdname mod_bar
 #'
 #' @keywords internal
 #' @export 
 #' @importFrom shiny NS tagList 
+
 mod_bar_ui <- function(id){
   ns <- NS(id)
   pageContainer(
-    h2("Criminal Type Counts Through Time"),
-    br(),
+    h2("Criminal Counts by Race and Sex"),
+    br(), 
     fluidRow(
       column(
         6,
-        uiOutput(ns("criminal_type_selected"))
+        uiOutput(ns("race_selected"))
       ),
       column(
         6,
-        shinyWidgets::radioGroupButtons(
-          inputId = ns("value"),
-          label = "Metric",
-          choices = c("count", "percentage"),
-          checkIcon = list(
-            yes = icon("ok",
-            lib = "glyphicon")
-          )
-        )
-      )
+        uiOutput(ns("sex_selected"))
+      ),
     ),
     echarts4r::echarts4rOutput(ns("trend"), height="50vh")
   )
@@ -42,54 +35,59 @@ mod_bar_ui <- function(id){
     
 # Module Server
     
-#' @rdname mod_ts
+#' @rdname mod_bar
 #' @export
 #' @keywords internal
-    
-arrest <- read.csv('../data/arrest.csv')
 
 mod_bar_server <- function(input, output, session){
   ns <- session$ns
-
-  output$criminal_type_selected <- renderUI({
-    cns <-arrest %>% 
-      dplyr::arrange(OFNS_DESC) %>% 
-      dplyr::distinct(OFNS_DESC) %>% 
-      dplyr::pull(OFNS_DESC)
+  
+  arrest <- read.csv('../data/arrest.csv') %>%
+    tidyr::separate(Race_Sex, c("Race", "Sex"), "_", remove = FALSE)
+  arrest$Sex <- plyr::mapvalues(arrest$Sex, c('F', 'M'), c('Female', 'Male'))
+  
+  output$race_selected <- renderUI({
+    rs <-arrest %>% 
+      dplyr::arrange(Race) %>% 
+      dplyr::distinct(Race) %>% 
+      dplyr::pull(Race)
 
     selectizeInput(
-      ns("criminal_type_selected"),
-      "Search a criminal type",
-      choices = cns,
-      selected = sample(cns, 2),
+      ns("race_selected"),
+      "Select a race",
+      choices = rs,
+      selected = sample(rs, 2),
       multiple = TRUE
     )
   })
 
-  output$trend <- echarts4r::renderEcharts4r({
-    req(input$criminal_type_selected)
-
-    temp <- arrest %>% 
-      dplyr::mutate(Year_Quarter = as.character(Year_Quarter)) %>% 
-      dplyr::arrange(Year_Quarter) %>% 
-      dplyr::filter(OFNS_DESC %in% input$criminal_type_selected) %>% 
-      dplyr::group_by(Year_Quarter)%>%
-      dplyr::summarise(total_count  = n())
+  output$sex_selected <- renderUI({
+    ss <-arrest %>% 
+      dplyr::arrange(Sex) %>% 
+      dplyr::distinct(Sex) %>% 
+      dplyr::pull(Sex)
     
+    selectizeInput(
+      ns("sex_selected"),
+      "Select a sex",
+      choices = ss,
+      selected = sample(ss, 1),
+      multiple = TRUE
+    )
+  })
+  
+  output$trend <- echarts4r::renderEcharts4r({
+    req(input$race_selected)
+    req(input$sex_selected)
     
     arrest %>% 
-      dplyr::mutate(Year_Quarter = as.character(Year_Quarter)) %>% 
-      dplyr::arrange(Year_Quarter) %>% 
-      dplyr::filter(OFNS_DESC %in% input$criminal_type_selected) %>% 
-      dplyr::group_by(OFNS_DESC,Year_Quarter)%>%
+      dplyr::filter(Race %in% input$race_selected & Sex %in% input$sex_selected) %>% 
+      dplyr::group_by(Race, Sex)%>%
       dplyr::summarise(count = n())%>%
-      left_join(temp, by = "Year_Quarter")%>%
-      dplyr::mutate(percentage = round(count/total_count, 2))%>% 
-      echarts4r::e_charts(Year_Quarter) %>% 
-      echarts4r::e_line_(input$value) %>% 
+      echarts4r::e_charts(Sex) %>% 
+      echarts4r::e_bar(count) %>% 
       echarts4r::e_tooltip(trigger = "axis") %>% 
-      echarts4r::e_y_axis(inverse = FALSE) %>% 
-      echarts4r::e_axis_labels("Year_Quarter") %>% 
+      echarts4r::e_axis_labels("Sex") %>% 
       echarts4r::e_color(
         c("#247BA0", "#FF1654", "#70C1B3", "#2f2f2f", "#F3FFBD", "#B2DBBF")
       )
