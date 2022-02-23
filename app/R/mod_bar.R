@@ -44,7 +44,7 @@ mod_bar_server <- function(input, output, session){
   
   arrest <- read.csv('data/arrest.csv') %>%
     tidyr::separate(Race_Sex, c("Race", "Sex"), "_", remove = FALSE)
-  arrest$Sex <- plyr::mapvalues(arrest$Sex, c('F', 'M'), c('Female', 'Male'))
+  arrest$Sex <- dplyr::recode(arrest$Sex, 'F' = 'Female', 'M' = 'Male')
   
   output$race_selected <- renderUI({
     rs <-arrest %>% 

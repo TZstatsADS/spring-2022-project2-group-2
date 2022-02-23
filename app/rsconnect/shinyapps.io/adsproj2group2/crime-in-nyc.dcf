@@ -5,9 +5,9 @@ account: adsproj2group2
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5717609
-bundleId: 5610348
+bundleId: 5610483
 url: https://adsproj2group2.shinyapps.io/crime-in-nyc/
-when: 1645633778.76272
-lastSyncTime: 1645633778.76274
+when: 1645635638.38492
+lastSyncTime: 1645635638.38493
 asMultiple: FALSE
 asStatic: FALSE

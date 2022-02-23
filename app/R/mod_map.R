@@ -10,7 +10,6 @@
 #' @importFrom shiny NS tagList 
 #' 
 
-library(dplyr)
 
 mod_map_ui <- function(id){
   ns <- NS(id)
@@ -53,16 +52,16 @@ mod_map_server <- function(input, output, session){
   output$map <- echarts4r::renderEcharts4r({
     if (input$value == "Borough") {
       arrest %>% 
-        count(ARREST_BORO, Year_Quarter) %>%
-        group_by(Year_Quarter) %>%
+        dplyr::count(ARREST_BORO, Year_Quarter) %>%
+        dplyr::group_by(Year_Quarter) %>%
         echarts4r::e_charts(ARREST_BORO, timeline = TRUE) %>% 
         echarts4r::e_map_register("nyc_boro", nyc_boro) %>% 
         echarts4r::e_map(n, map = "nyc_boro", name = 'Borough') %>%
         afterecharts()
     } else {
       arrest %>% 
-        count(ARREST_PRECINCT, Year_Quarter) %>%
-        group_by(Year_Quarter) %>%
+        dplyr::count(ARREST_PRECINCT, Year_Quarter) %>%
+        dplyr::group_by(Year_Quarter) %>%
         echarts4r::e_charts(ARREST_PRECINCT, timeline = TRUE) %>% 
         echarts4r::e_map_register("nyc_precinct", nyc_precinct) %>% 
         echarts4r::e_map(n, map = "nyc_precinct", name = 'Precinct') %>%
