@@ -19,7 +19,7 @@ app_ui <- function() {
       ),
       pageSectionImage(
         center = TRUE,
-        img = "www/img/reading.jpg",
+        img = "www/img/nyc.jpg",
         menu = "home",
         h1(typedjs::typed(c("What Happened to Criminals during Pandemic?^1000", "New York Criminal Analysis^500<br>A Visualisation"), typeSpeed = 25, smartBackspace = TRUE), class = "header shadow-dark"),
         h3(
