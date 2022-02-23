@@ -12,6 +12,7 @@ Imports:
     shiny,
     golem,
     dplyr,
+    plyr,
     typed,
     tidyr,
     fullPage,
@@ -19,10 +20,11 @@ Imports:
     echarts4r,
     shinythemes,
     shinyWidgets,
-    pkgload
+    pkgload,
+    typedjs
 RoxygenNote: 7.0.2
 Remotes:
   hadley/emo,
   news-r/fopi,
-  JohnCoene/typed,
+  JohnCoene/typedjs,
   RinteRface/fullPage

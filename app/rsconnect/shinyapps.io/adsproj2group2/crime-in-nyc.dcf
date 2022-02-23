@@ -1,0 +1,13 @@
+name: crime-in-nyc
+title: crime-in-nyc
+username:
+account: adsproj2group2
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5717609
+bundleId: 5610348
+url: https://adsproj2group2.shinyapps.io/crime-in-nyc/
+when: 1645633778.76272
+lastSyncTime: 1645633778.76274
+asMultiple: FALSE
+asStatic: FALSE

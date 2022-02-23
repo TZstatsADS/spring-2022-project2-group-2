@@ -36,10 +36,10 @@ mod_map_ui <- function(id){
 #' @noRd
 #' 
 
-arrest <- read.csv('../data/arrest.csv')
+arrest <- read.csv('data/arrest.csv')
 
-nyc_boro <- jsonlite::read_json('../data/boroughs.geojson')
-nyc_precinct <- jsonlite::read_json('../data/police_precincts.geojson')
+nyc_boro <- jsonlite::read_json('data/boroughs.geojson')
+nyc_precinct <- jsonlite::read_json('data/police_precincts.geojson')
 
 mod_map_server <- function(input, output, session){
   ns <- session$ns
