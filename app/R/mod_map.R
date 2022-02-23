@@ -16,7 +16,7 @@ mod_map_ui <- function(id){
   ns <- NS(id)
   pageContainer(
     class = "light",
-    h2("Criminal Areas through time"),
+    h2("Number of arrests through time"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("value"),
       label = "Map Division",
@@ -36,7 +36,8 @@ mod_map_ui <- function(id){
 #' @noRd
 #' 
 
-arrest <- read.csv('../data/arrest.csv')
+arrest <- read.csv('../data/arrest.csv') %>%
+  dplyr::mutate(Borough = ARREST_BORO, Precinct = ARREST_PRECINCT)
 
 nyc_boro <- jsonlite::read_json('../data/boroughs.geojson')
 nyc_precinct <- jsonlite::read_json('../data/police_precincts.geojson')
@@ -53,17 +54,17 @@ mod_map_server <- function(input, output, session){
   output$map <- echarts4r::renderEcharts4r({
     if (input$value == "Borough") {
       arrest %>% 
-        count(ARREST_BORO, Year_Quarter) %>%
+        count(Borough, Year_Quarter) %>%
         group_by(Year_Quarter) %>%
-        echarts4r::e_charts(ARREST_BORO, timeline = TRUE) %>% 
+        echarts4r::e_charts(Borough, timeline = TRUE) %>% 
         echarts4r::e_map_register("nyc_boro", nyc_boro) %>% 
         echarts4r::e_map(n, map = "nyc_boro", name = 'Borough') %>%
         afterecharts()
     } else {
       arrest %>% 
-        count(ARREST_PRECINCT, Year_Quarter) %>%
+        count(Precinct, Year_Quarter) %>%
         group_by(Year_Quarter) %>%
-        echarts4r::e_charts(ARREST_PRECINCT, timeline = TRUE) %>% 
+        echarts4r::e_charts(Precinct, timeline = TRUE) %>% 
         echarts4r::e_map_register("nyc_precinct", nyc_precinct) %>% 
         echarts4r::e_map(n, map = "nyc_precinct", name = 'Precinct') %>%
         afterecharts()
