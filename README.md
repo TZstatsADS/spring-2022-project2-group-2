@@ -1,6 +1,6 @@
 # Project 2: New York Criminal Analysis
 
-## Term: Spring 2022
++ Term: Spring 2022
 + Group 2
 + Team Members:
 	+ Jun Ding, jd3716@columbia.edu
