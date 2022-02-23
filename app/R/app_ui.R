@@ -13,8 +13,8 @@ app_ui <- function() {
       menu = c(
         "Home" = "home",
         "Map" = "map",
-        "Series" = "ts",
         "Bar" = "bar",
+        "Series" = "ts",
         "About" = "about"
       ),
       pageSectionImage(
@@ -34,13 +34,13 @@ app_ui <- function() {
       ),
       pageSection(
         center = TRUE,
-        menu = "ts",
-        mod_ts_ui("ts")
+        menu = "bar",
+        mod_bar_ui("bar")
       ),
       pageSection(
         center = TRUE,
-        menu = "bar",
-        mod_bar_ui("bar")
+        menu = "ts",
+        mod_ts_ui("ts")
       ),
       pageSection(
         center = TRUE,
@@ -52,7 +52,7 @@ app_ui <- function() {
           "|",
           tags$a("Data", href = "https://data.cityofnewyork.us/Public-Safety/NYPD-Arrests-Data-Historic-/8h9b-rp9u", target = "_blank", class = "link")
         ),
-        h5(
+        h4(
           class = "light footer",
           "Group member: Jun Ding | Daoyang E | Jingwei Liao | Xiran Lin"
         )
