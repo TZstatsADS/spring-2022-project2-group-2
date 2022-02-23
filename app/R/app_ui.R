@@ -50,7 +50,9 @@ app_ui <- function() {
           class = "shadow-light",
           tags$a("Github", href = "https://github.com/TZstatsADS/spring-2022-project2-group-2", target = "_blank", class = "link"),
           "|",
-          tags$a("Data", href = "https://data.cityofnewyork.us/Public-Safety/NYPD-Arrests-Data-Historic-/8h9b-rp9u", target = "_blank", class = "link")
+          tags$a("Data1", href = "https://data.cityofnewyork.us/Public-Safety/NYPD-Arrests-Data-Historic-/8h9b-rp9u", target = "_blank", class = "link"),
+          "|",
+          tags$a("Data2", href = "https://data.cityofnewyork.us/Public-Safety/NYPD-Arrest-Data-Year-to-Date-/uip8-fykc", target = "_blank", class = "link")
         ),
         h4(
           class = "light footer",
