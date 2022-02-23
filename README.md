@@ -19,6 +19,6 @@
 + **Contribution statement**: All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. The following is our duty for this project:
 	+ *Jun Ding* cleaned the data for the rest team members as what they used further;
 	+ *Daoyang E* created the page "Series";
-	+ *Junwei Liao* prodeuced theh page "Map";
+	+ *Junwei Liao* produced the page "Map";
 	+ *Xiran Lin* is responsible for the page "Bar".
 
