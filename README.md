@@ -1,46 +1,21 @@
-# Project 2: Shiny App Development
+# Project 2: New York Criminal Analysis
 
-### [Project Description](doc/project2_desc.md)
+## Term: Spring 2022
++ Group 2
++ Team Members:
+	+ Jun Ding, (jd3716@columbia.edu)
+	+ Daoyang E, (de2418@columbia.edu)
+	+ Junwei Liao, (jl5983@columbia.edu)
+	+ Xiran Lin, (xl3000@columbia.edu)
 
-![screenshot](doc/figs/map.jpg)
-
-In this second project of GR5243 Applied Data Science, we develop a *Exploratory Data Analysis and Visualization* shiny app on the work of a **NYC government agency/program** of your choice using NYC open data released on the [NYC Open Data By Agency](https://opendata.cityofnewyork.us/data/) website. In particular, many agencies have adjusted their work or rolled out new programs due to COVID, your app should provide ways for a user to explore quantiative measures of how covid has impacted daily life in NYC from different prospectives. See [Project 2 Description](doc/project2_desc.md) for more details.  
-
-The **learning goals** for this project is:
-
-- business intelligence for data science
-- data cleaning
-- data visualization
-- systems development/design life cycle
-- shiny app/shiny server
-
-*The above general statement about project 2 can be removed once you are finished with your project. It is optional.
-
-## Project Title Lorem ipsum dolor sit amet
-Term: Spring 2022
-
-+ Team #
-+ **Projec title**: + Team members
-	+ team member 1
-	+ team member 2
-	+ team member 3
-	+ team member 4
-	+ team member 5
-
-+ **Project summary**: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-+ **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
-
-Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
-
-```
-proj/
-├── app/
-├── lib/
-├── data/
-├── doc/
-└── output/
-```
-
-Please see each subfolder for a README file.
++ **Project summary**:In this project, we use the data from ([NYPD Arrest Data (Year to Date)](https://data.cityofnewyork.us/Public-Safety/NYPD-Arrest-Data-Year-to-Date-/uip8-fykc)). We want to illustrate the relationships among *time period, location, race, sex, and criminal type* with *number of crimes*. We used three materials to visualize our dataset:
+	+  "Map" shows *the density of crimes* among *different areas* occured in New York City. "Precinct" and "Borough" can be selected so that users can choose which kind of map they prefer to see. Furthermore, users can also to see the number of crime in specified area by pointing that area.
+	+  In "Bar", users can select at least one race and one sex to visualize the the relationships between *race & sex* and *crime numbers* within the past 4 years though a bar graph. 
+	+  Via "Series", users can see a line chart with different *criminal types*, as *time period per quater* versus either *the counts of crime* or *the percentage of crime*. 
+	
++ **Contribution statement**: All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. The following is our duty for this project:
+	+ *Jun Ding* cleaned the data for the rest team members as what they used further;
+	+ *Daoyang E* created the page "Series";
+	+ *Junwei Liao* prodeuced theh page "Map";
+	+ *Xiran Lin* is responsible for the page "Bar".
 
