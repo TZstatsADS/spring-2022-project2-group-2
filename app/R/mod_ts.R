@@ -46,7 +46,6 @@ mod_ts_ui <- function(id){
 #' @export
 #' @keywords internal
     
-arrest <- read.csv('data/arrest.csv')
 
 mod_ts_server <- function(input, output, session){
   ns <- session$ns

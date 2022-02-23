@@ -1,5 +1,6 @@
 #' @import shiny
 
+arrest <- read.csv('data/arrest.csv')
 app_server <- function(input, output, session) {
 
   echarts4r::e_common(

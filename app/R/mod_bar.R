@@ -42,8 +42,7 @@ mod_bar_ui <- function(id){
 mod_bar_server <- function(input, output, session){
   ns <- session$ns
   
-  arrest <- read.csv('data/arrest.csv') %>%
-    tidyr::separate(Race_Sex, c("Race", "Sex"), "_", remove = FALSE)
+  arrest <- arrest %>% tidyr::separate(Race_Sex, c("Race", "Sex"), "_", remove = FALSE)
   arrest$Sex <- dplyr::recode(arrest$Sex, 'F' = 'Female', 'M' = 'Male')
   
   output$race_selected <- renderUI({
