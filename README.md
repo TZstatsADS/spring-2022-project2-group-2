@@ -1,4 +1,5 @@
 # Project 2: New York Criminal Analysis -- A Visualization
+![image](https://user-images.githubusercontent.com/98058933/155400695-06a0ed43-e4e1-4a8f-9756-ddd35d6f2f50.png)
 
 + Term: Spring 2022
 + Group 2
